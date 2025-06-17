@@ -55,7 +55,7 @@ No credential file needed.
 "aiden-gsuite": {
   "command": "uvx",
   "args": [
-    "aiden-gsuite@0.1.2"
+    "aiden-gsuite@0.1.4"
   ],
   "credential": {
     "type": "oauth",
@@ -79,7 +79,7 @@ experience, we strongly recommend using the [MCP Inspector](https://github.com/m
 You can launch the MCP Inspector via [ `npm` ](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /path/to/mcp-gsuite run aiden-gsuite
+npx @modelcontextprotocol/inspector uv --directory /path/to/aiden-gsuite run aiden-gsuite
 ```
 
 Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.

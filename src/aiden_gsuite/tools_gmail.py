@@ -111,7 +111,37 @@ class GetEmailByIdToolHandler(toolhandler.ToolHandler):
         email["attachments"] = attachments
 
         return [TextContent(type="text", text=json.dumps({"email": email}, indent=2))]
+    
 
+class DeleteEmailToolHandler(toolhandler.ToolHandler):
+    def __init__(self):
+        super().__init__("delete_gmail_email")
+
+    def get_tool_description(self) -> Tool:
+        return Tool(
+            name=self.name,
+            description="Deletes a Gmail email message by its ID.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "email_id": {
+                        "type": "string",
+                        "description": "The ID of the Gmail message to delete",
+                    }
+                },
+                "required": ["email_id"],
+            },
+        )
+    
+    def run_tool(
+        self, args: dict
+    ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+        if "email_id" not in args:
+            raise RuntimeError("Missing required argument: email_id")
+
+        gmail_service = gmail.GmailService(credential=Credential(args))
+        _, message = gmail_service.delete_email(args["email_id"])
+        return [TextContent(type="text", text=message)]
 
 class BulkGetEmailsByIdsToolHandler(toolhandler.ToolHandler):
     def __init__(self):

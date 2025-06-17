@@ -177,6 +177,24 @@ class GmailService:
             logging.error(f"Error reading emails: {str(e)}")
             logging.error(traceback.format_exc())
             return []
+        
+    def delete_email(self, email_id: str) -> Tuple[bool, str]:
+        """
+        Delete an email by its ID.
+
+        Args:
+            email_id (str): The Gmail message ID to delete
+
+        Returns:
+            Tuple[bool, str]: True if deletion was successful, False otherwise
+        """
+        try:
+            self.service.users().messages().delete(userId="me", id=email_id).execute()
+            return True, f"Successfully deleted email {email_id}"
+        except Exception as e:
+            logging.error(f"Error deleting email {email_id}: {str(e)}")
+            logging.error(traceback.format_exc())
+            return False, f"Failed to delete email {email_id}: {str(e)}"
 
     def get_email_by_id_with_attachments(
         self, email_id: str
