@@ -128,11 +128,11 @@ class CreateCalendarEventToolHandler(toolhandler.ToolHandler):
                     },
                     "start_time": {
                         "type": "string",
-                        "description": "Start time in RFC3339 format (e.g. 2024-12-01T10:00:00Z)",
+                        "description": "Start time in RFC3339 format (e.g. 2024-12-01T10:00:00Z or 2024-12-01T10:00:00+08:00). Timezone offset is required if not in UTC",
                     },
                     "end_time": {
                         "type": "string",
-                        "description": "End time in RFC3339 format (e.g. 2024-12-01T11:00:00Z)",
+                        "description": "End time in RFC3339 format (e.g. 2024-12-01T11:00:00Z or 2024-12-01T11:00:00+08:00). Timezone offset is required if not in UTC",
                     },
                     "attendees": {
                         "type": "array",

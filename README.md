@@ -1,5 +1,7 @@
 # aiden-gsuite MCP server
 
+![PyPI - Version](https://img.shields.io/pypi/v/aiden-gsuite)
+
 > This project is based on [mcp-gsuite](https://github.com/MarkusPfundstein/mcp-gsuite)
 
 MCP server to interact with Google products. With [Aiden](https://github.com/AllWiseAI/aiden-chat), Google account authorization is extremely simplified.
