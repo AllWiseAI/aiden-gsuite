@@ -8,7 +8,7 @@ import httplib2
 from googleapiclient.discovery import build
 from oauth2client.client import AccessTokenCredentials
 
-from mcp_gsuite.credential import MCP_AGENT, Credential
+from aiden_gsuite.credential import MCP_AGENT, Credential
 
 
 class GmailService:

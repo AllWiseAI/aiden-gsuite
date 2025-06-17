@@ -1,6 +1,6 @@
 [project]
-name = "mcp-gsuite"
-version = "0.4.1"
+name = "aiden-gsuite"
+version = "0.1.0"
 description = "MCP Server to connect to Google G-Suite"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -15,8 +15,8 @@ dependencies = [
  "requests>=2.32.3",
 ]
 [[project.authors]]
-name = "Markus Pfundstein"
-email = "markus@life-electronic.nl"
+name = "Huang Han"
+email = "huanghan@foxwallet.com"
 
 [build-system]
 requires = [ "hatchling",]
@@ -28,4 +28,4 @@ dev = [
 ]
 
 [project.scripts]
-mcp-gsuite = "mcp_gsuite:main"
+aiden-gsuite = "aiden_gsuite:main"

@@ -6,7 +6,7 @@ from mcp.types import (
     EmbeddedResource,
 )
 
-from mcp_gsuite.credential import CREDENTIAL_ARG
+from aiden_gsuite.credential import CREDENTIAL_ARG
 
 class ToolHandler:
     def __init__(self, tool_name: str):

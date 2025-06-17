@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 import httplib2
 from oauth2client.client import AccessTokenCredentials
-from mcp_gsuite.credential import Credential, MCP_AGENT
+from aiden_gsuite.credential import Credential, MCP_AGENT
 import logging
 import traceback
 from datetime import datetime

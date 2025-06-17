@@ -1,5 +1,4 @@
 import logging
-import sys
 import traceback
 from collections.abc import Sequence
 from typing import Any
