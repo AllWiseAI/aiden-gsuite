@@ -67,11 +67,11 @@ class GetCalendarEventsToolHandler(toolhandler.ToolHandler):
                     "__calendar_id__": get_calendar_id_arg_schema(),
                     "time_min": {
                         "type": "string",
-                        "description": "Start time in RFC3339 format (e.g. 2024-12-01T00:00:00Z). Defaults to current time if not specified.",
+                        "description": "Start time in RFC3339 format (e.g. 2024-12-01T00:00:00Z or 2024-12-01T00:00:00+08:00). Defaults to current time if not specified. Timezone offset is required if not in UTC",
                     },
                     "time_max": {
                         "type": "string",
-                        "description": "End time in RFC3339 format (e.g. 2024-12-31T23:59:59Z). Optional.",
+                        "description": "End time in RFC3339 format (e.g. 2024-12-31T23:59:59Z or 2024-12-31T23:59:59+08:00). Optional. Timezone offset is required if not in UTC",
                     },
                     "max_results": {
                         "type": "integer",
