@@ -192,3 +192,47 @@ class CalendarService():
             logging.error(f"Error deleting calendar event {event_id}: {str(e)}")
             logging.error(traceback.format_exc())
             return False
+        
+    def modify_event(self, event_id: str, summary: str, start_time: str, end_time: str, 
+                location: str | None = None, description: str | None = None, 
+                attendees: list | None = None, send_notifications: bool = True,
+                timezone: str | None = None,
+                calendar_id : str = 'primary') -> dict | None:
+        """
+        Modify an existing calendar event.
+        """
+
+        event = self.service.events().get(
+            calendarId=calendar_id,
+            eventId=event_id
+        ).execute()
+        
+        if event:
+            event['summary'] = summary
+            event['start'] = {
+                'dateTime': start_time,
+                'timeZone': timezone or 'UTC',
+            }
+            event['end'] = {
+                'dateTime': end_time,
+                'timeZone': timezone or 'UTC',
+            }
+            if location:
+                event['location'] = location
+            if description:
+                event['description'] = description
+            if attendees:
+                event['attendees'] = [{'email': email} for email in attendees]
+            
+            updated_event = self.service.events().update(
+                calendarId=calendar_id,
+                eventId=event_id,
+                body=event,
+                sendNotifications=send_notifications
+            ).execute()
+            
+            return updated_event
+        
+        else:
+            logging.error(f"Event {event_id} not found")
+            raise RuntimeError(f"Event {event_id} not found")

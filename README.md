@@ -56,7 +56,7 @@ No credential file needed with [Aiden](https://github.com/AllWiseAI/aiden-chat).
 "aiden-gsuite": {
   "command": "uvx",
   "args": [
-    "aiden-gsuite@0.1.4"
+    "aiden-gsuite@0.1.6"
   ],
   "credential": {
     "type": "oauth",

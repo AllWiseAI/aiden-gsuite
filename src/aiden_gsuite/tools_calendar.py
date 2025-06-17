@@ -176,6 +176,87 @@ class CreateCalendarEventToolHandler(toolhandler.ToolHandler):
 
         return [TextContent(type="text", text=json.dumps({"event": event}, indent=2))]
 
+    
+class ModifyCalendarEventToolHandler(toolhandler.ToolHandler):
+    def __init__(self):
+        super().__init__("modify_calendar_event")
+
+    def get_tool_description(self) -> Tool:
+        return Tool(
+            name=self.name,
+            description="Modifies an existing event in a specified Google Calendar of the specified user.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "__calendar_id__": get_calendar_id_arg_schema(),
+                    "event_id": {
+                        "type": "string",
+                        "description": "The ID of the calendar event to modify",
+                    },
+                    "summary": {"type": "string", "description": "Title of the event"},
+                    "location": {
+                        "type": "string",
+                        "description": "Location of the event (optional)",
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description or notes for the event (optional)",
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "description": "Start time in RFC3339 format (e.g. 2024-12-01T10:00:00Z or 2024-12-01T10:00:00+08:00). Timezone offset is required if not in UTC",
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "description": "End time in RFC3339 format (e.g. 2024-12-01T11:00:00Z or 2024-12-01T11:00:00+08:00). Timezone offset is required if not in UTC",
+                    },
+                    "attendees": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of attendee email addresses (optional)",
+                    },
+                    "send_notifications": {
+                        "type": "boolean",
+                        "description": "Whether to send notifications to attendees",
+                        "default": True,
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "description": "Timezone for the event (e.g. 'America/New_York'). Defaults to UTC if not specified.",
+                    },
+                },
+                "required": ["summary", "start_time", "end_time"],
+            },
+        )
+
+    def run_tool(
+        self, args: dict
+    ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
+        # Validate required arguments
+        required = ["event_id", "summary", "start_time", "end_time"]
+        if not all(key in args for key in required):
+            raise RuntimeError(f"Missing required arguments: {', '.join(required)}")
+
+        calendar_service = calendar.CalendarService(credential=Credential(args))
+
+        try:
+            event = calendar_service.modify_event(
+                event_id=args["event_id"],
+                summary=args["summary"],
+                start_time=args["start_time"],
+                end_time=args["end_time"],
+                location=args.get("location"),
+                description=args.get("description"),
+                attendees=args.get("attendees", []),
+                send_notifications=args.get("send_notifications", True),
+                timezone=args.get("timezone"),
+                calendar_id=args.get(CALENDAR_ID_ARG, "primary"),
+            )
+
+            return [TextContent(type="text", text=json.dumps({"event": event}, indent=2))]
+        except Exception as e:
+            return [TextContent(type="text", text=json.dumps({"error": str(e)}, indent=2))]
+
 
 class DeleteCalendarEventToolHandler(toolhandler.ToolHandler):
     def __init__(self):

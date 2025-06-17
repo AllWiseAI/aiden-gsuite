@@ -52,6 +52,7 @@ add_tool_handler(tools_gmail.BulkSaveAttachmentsToolHandler())
 add_tool_handler(tools_calendar.ListCalendarsToolHandler())
 add_tool_handler(tools_calendar.GetCalendarEventsToolHandler())
 add_tool_handler(tools_calendar.CreateCalendarEventToolHandler())
+add_tool_handler(tools_calendar.ModifyCalendarEventToolHandler())
 add_tool_handler(tools_calendar.DeleteCalendarEventToolHandler())
 
 
