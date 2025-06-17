@@ -53,12 +53,9 @@ No credential file needed.
 
 ```json
 "aiden-gsuite": {
-  "command": "uv",
+  "command": "uvx",
   "args": [
-    "--directory",
-    "path/to/aiden-gsuite",
-    "run",
-    "aiden-gsuite"
+    "aiden-gsuite@0.1.2"
   ],
   "credential": {
     "type": "oauth",
@@ -70,7 +67,7 @@ No credential file needed.
       "https://www.googleapis.com/auth/userinfo.email"
     ]
   },
-  "transport": "stdio",
+  "transport": "stdio"
 }
 ```
 
