@@ -31,6 +31,7 @@ Right now, this MCP server supports Gmail and Calendar integration with the foll
   + Optional attendees
   + Custom timezone support
   + Notification preferences
+* Modify calendar events
 * Delete calendar events
 
 Example prompts you can try:
