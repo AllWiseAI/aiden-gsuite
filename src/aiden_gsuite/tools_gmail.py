@@ -58,6 +58,7 @@ class QueryEmailsToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -89,6 +90,7 @@ class GetEmailByIdToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -133,6 +135,7 @@ class DeleteEmailToolHandler(toolhandler.ToolHandler):
             },
         )
     
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -140,8 +143,8 @@ class DeleteEmailToolHandler(toolhandler.ToolHandler):
             raise RuntimeError("Missing required argument: email_id")
 
         gmail_service = gmail.GmailService(credential=Credential(args))
-        _, message = gmail_service.delete_email(args["email_id"])
-        return [TextContent(type="text", text=message)]
+        gmail_service.delete_email(args["email_id"])
+        return [TextContent(type="text", text="Email deleted successfully")]
 
 class BulkGetEmailsByIdsToolHandler(toolhandler.ToolHandler):
     def __init__(self):
@@ -164,6 +167,7 @@ class BulkGetEmailsByIdsToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -229,6 +233,7 @@ class CreateDraftToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -267,6 +272,7 @@ class SendDraftToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -274,16 +280,16 @@ class SendDraftToolHandler(toolhandler.ToolHandler):
             raise RuntimeError("Missing required argument: draft_id")
 
         gmail_service = gmail.GmailService(credential=Credential(args))
-        success = gmail_service.send_draft(args["draft_id"])
 
+        gmail_service.send_draft(args["draft_id"])
         return [
             TextContent(
                 type="text",
                 text="Successfully sent draft"
-                if success
-                else f"Failed to send draft with ID: {args['draft_id']}",
             )
         ]
+            
+
 
 
 class DeleteDraftToolHandler(toolhandler.ToolHandler):
@@ -306,6 +312,7 @@ class DeleteDraftToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -313,14 +320,12 @@ class DeleteDraftToolHandler(toolhandler.ToolHandler):
             raise RuntimeError("Missing required argument: draft_id")
 
         gmail_service = gmail.GmailService(credential=Credential(args))
-        success = gmail_service.delete_draft(args["draft_id"])
+        gmail_service.delete_draft(args["draft_id"])
 
         return [
             TextContent(
                 type="text",
                 text="Successfully deleted draft"
-                if success
-                else f"Failed to delete draft with ID: {args['draft_id']}",
             )
         ]
 
@@ -362,6 +367,7 @@ class ReplyEmailToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -439,6 +445,7 @@ class GetAttachmentToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -526,6 +533,7 @@ class BulkSaveAttachmentsToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:

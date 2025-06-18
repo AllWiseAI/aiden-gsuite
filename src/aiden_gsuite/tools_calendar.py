@@ -40,6 +40,7 @@ class ListCalendarsToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -90,6 +91,7 @@ class GetCalendarEventsToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -153,6 +155,7 @@ class CreateCalendarEventToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -229,6 +232,7 @@ class ModifyCalendarEventToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -238,24 +242,20 @@ class ModifyCalendarEventToolHandler(toolhandler.ToolHandler):
             raise RuntimeError(f"Missing required arguments: {', '.join(required)}")
 
         calendar_service = calendar.CalendarService(credential=Credential(args))
+        event = calendar_service.modify_event(
+            event_id=args["event_id"],
+            summary=args["summary"],
+            start_time=args["start_time"],
+            end_time=args["end_time"],
+            location=args.get("location"),
+            description=args.get("description"),
+            attendees=args.get("attendees", []),
+            send_notifications=args.get("send_notifications", True),
+            timezone=args.get("timezone"),
+            calendar_id=args.get(CALENDAR_ID_ARG, "primary"),
+        )
 
-        try:
-            event = calendar_service.modify_event(
-                event_id=args["event_id"],
-                summary=args["summary"],
-                start_time=args["start_time"],
-                end_time=args["end_time"],
-                location=args.get("location"),
-                description=args.get("description"),
-                attendees=args.get("attendees", []),
-                send_notifications=args.get("send_notifications", True),
-                timezone=args.get("timezone"),
-                calendar_id=args.get(CALENDAR_ID_ARG, "primary"),
-            )
-
-            return [TextContent(type="text", text=json.dumps({"event": event}, indent=2))]
-        except Exception as e:
-            return [TextContent(type="text", text=json.dumps({"error": str(e)}, indent=2))]
+        return [TextContent(type="text", text=json.dumps({"event": event}, indent=2))]
 
 
 class DeleteCalendarEventToolHandler(toolhandler.ToolHandler):
@@ -284,6 +284,7 @@ class DeleteCalendarEventToolHandler(toolhandler.ToolHandler):
             },
         )
 
+    @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
@@ -291,7 +292,7 @@ class DeleteCalendarEventToolHandler(toolhandler.ToolHandler):
             raise RuntimeError("Missing required argument: event_id")
 
         calendar_service = calendar.CalendarService(credential=Credential(args))
-        success = calendar_service.delete_event(
+        calendar_service.delete_event(
             event_id=args["event_id"],
             send_notifications=args.get("send_notifications", True),
             calendar_id=args.get(CALENDAR_ID_ARG, "primary"),
@@ -300,14 +301,6 @@ class DeleteCalendarEventToolHandler(toolhandler.ToolHandler):
         return [
             TextContent(
                 type="text",
-                text=json.dumps(
-                    {
-                        "success": success,
-                        "message": "Event successfully deleted"
-                        if success
-                        else "Failed to delete event",
-                    },
-                    indent=2,
-                ),
+                text="Event successfully deleted"
             )
         ]

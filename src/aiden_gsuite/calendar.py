@@ -21,28 +21,22 @@ class CalendarService():
         Returns:
             list: List of calendar objects with their metadata
         """
-        try:
-            calendar_list = self.service.calendarList().list().execute()
+        calendar_list = self.service.calendarList().list().execute()
 
-            calendars = []
-            
-            for calendar in calendar_list.get('items', []):
-                if calendar.get('kind') == 'calendar#calendarListEntry':
-                    calendars.append({
-                        'id': calendar.get('id'),
-                        'summary': calendar.get('summary'),
-                        'primary': calendar.get('primary', False),
-                        'time_zone': calendar.get('timeZone'),
-                        'etag': calendar.get('etag'),
-                        'access_role': calendar.get('accessRole')
-                    })
+        calendars = []
+        
+        for calendar in calendar_list.get('items', []):
+            if calendar.get('kind') == 'calendar#calendarListEntry':
+                calendars.append({
+                    'id': calendar.get('id'),
+                    'summary': calendar.get('summary'),
+                    'primary': calendar.get('primary', False),
+                    'time_zone': calendar.get('timeZone'),
+                    'etag': calendar.get('etag'),
+                    'access_role': calendar.get('accessRole')
+                })
 
-            return calendars
-                
-        except Exception as e:
-            logging.error(f"Error retrieving calendars: {str(e)}")
-            logging.error(traceback.format_exc())
-            return []
+        return calendars
 
     def get_events(self, time_min=None, time_max=None, max_results=250, show_deleted=False, calendar_id: str ='primary'):
         """
@@ -57,60 +51,54 @@ class CalendarService():
         Returns:
             list: List of calendar events
         """
-        try:
-            # If no time_min specified, use current time
-            if not time_min:
-                time_min = datetime.now(pytz.UTC).isoformat()
-                
-            # Ensure max_results is within limits
-            max_results = min(max(1, max_results), 2500)
+        # If no time_min specified, use current time
+        if not time_min:
+            time_min = datetime.now(pytz.UTC).isoformat()
             
-            # Prepare parameters
-            params = {
-                'calendarId': calendar_id,
-                'timeMin': time_min,
-                'maxResults': max_results,
-                'singleEvents': True,
-                'orderBy': 'startTime',
-                'showDeleted': show_deleted
+        # Ensure max_results is within limits
+        max_results = min(max(1, max_results), 2500)
+        
+        # Prepare parameters
+        params = {
+            'calendarId': calendar_id,
+            'timeMin': time_min,
+            'maxResults': max_results,
+            'singleEvents': True,
+            'orderBy': 'startTime',
+            'showDeleted': show_deleted
+        }
+        
+        # Add optional time_max if specified
+        if time_max:
+            params['timeMax'] = time_max
+            
+        # Execute the events().list() method
+        events_result = self.service.events().list(**params).execute()
+        
+        # Extract the events
+        events = events_result.get('items', [])
+        
+        # Process and return the events
+        processed_events = []
+        for event in events:
+            processed_event = {
+                'id': event.get('id'),
+                'summary': event.get('summary'),
+                'description': event.get('description'),
+                'start': event.get('start'),
+                'end': event.get('end'),
+                'status': event.get('status'),
+                'creator': event.get('creator'),
+                'organizer': event.get('organizer'),
+                'attendees': event.get('attendees'),
+                'location': event.get('location'),
+                'hangoutLink': event.get('hangoutLink'),
+                'conferenceData': event.get('conferenceData'),
+                'recurringEventId': event.get('recurringEventId')
             }
+            processed_events.append(processed_event)
             
-            # Add optional time_max if specified
-            if time_max:
-                params['timeMax'] = time_max
-                
-            # Execute the events().list() method
-            events_result = self.service.events().list(**params).execute()
-            
-            # Extract the events
-            events = events_result.get('items', [])
-            
-            # Process and return the events
-            processed_events = []
-            for event in events:
-                processed_event = {
-                    'id': event.get('id'),
-                    'summary': event.get('summary'),
-                    'description': event.get('description'),
-                    'start': event.get('start'),
-                    'end': event.get('end'),
-                    'status': event.get('status'),
-                    'creator': event.get('creator'),
-                    'organizer': event.get('organizer'),
-                    'attendees': event.get('attendees'),
-                    'location': event.get('location'),
-                    'hangoutLink': event.get('hangoutLink'),
-                    'conferenceData': event.get('conferenceData'),
-                    'recurringEventId': event.get('recurringEventId')
-                }
-                processed_events.append(processed_event)
-                
-            return processed_events
-            
-        except Exception as e:
-            logging.error(f"Error retrieving calendar events: {str(e)}")
-            logging.error(traceback.format_exc())
-            return []
+        return processed_events
         
     def create_event(self, summary: str, start_time: str, end_time: str, 
                 location: str | None = None, description: str | None = None, 
@@ -133,43 +121,37 @@ class CalendarService():
         Returns:
             dict: Created event data or None if creation fails
         """
-        try:
-            # Prepare event data
-            event = {
-                'summary': summary,
-                'start': {
-                    'dateTime': start_time,
-                    'timeZone': timezone or 'UTC',
-                },
-                'end': {
-                    'dateTime': end_time,
-                    'timeZone': timezone or 'UTC',
-                }
+        # Prepare event data
+        event = {
+            'summary': summary,
+            'start': {
+                'dateTime': start_time,
+                'timeZone': timezone or 'UTC',
+            },
+            'end': {
+                'dateTime': end_time,
+                'timeZone': timezone or 'UTC',
             }
-            
-            # Add optional fields if provided
-            if location:
-                event['location'] = location
-            if description:
-                event['description'] = description
-            if attendees:
-                event['attendees'] = [{'email': email} for email in attendees]
-                
-            # Create the event
-            created_event = self.service.events().insert(
-                calendarId=calendar_id,
-                body=event,
-                sendNotifications=send_notifications
-            ).execute()
-            
-            return created_event
-            
-        except Exception as e:
-            logging.error(f"Error creating calendar event: {str(e)}")
-            logging.error(traceback.format_exc())
-            return None
+        }
         
-    def delete_event(self, event_id: str, send_notifications: bool = True, calendar_id: str = 'primary') -> bool:
+        # Add optional fields if provided
+        if location:
+            event['location'] = location
+        if description:
+            event['description'] = description
+        if attendees:
+            event['attendees'] = [{'email': email} for email in attendees]
+            
+        # Create the event
+        created_event = self.service.events().insert(
+            calendarId=calendar_id,
+            body=event,
+            sendNotifications=send_notifications
+        ).execute()
+        
+        return created_event
+        
+    def delete_event(self, event_id: str, send_notifications: bool = True, calendar_id: str = 'primary'):
         """
         Delete a calendar event by its ID.
         
@@ -180,18 +162,11 @@ class CalendarService():
         Returns:
             bool: True if deletion was successful, False otherwise
         """
-        try:
-            self.service.events().delete(
-                calendarId=calendar_id,
-                eventId=event_id,
-                sendNotifications=send_notifications
-            ).execute()
-            return True
-            
-        except Exception as e:
-            logging.error(f"Error deleting calendar event {event_id}: {str(e)}")
-            logging.error(traceback.format_exc())
-            return False
+        self.service.events().delete(
+            calendarId=calendar_id,
+            eventId=event_id,
+            sendNotifications=send_notifications
+        ).execute()
         
     def modify_event(self, event_id: str, summary: str, start_time: str, end_time: str, 
                 location: str | None = None, description: str | None = None, 
