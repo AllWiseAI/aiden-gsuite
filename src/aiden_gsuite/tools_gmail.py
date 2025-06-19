@@ -3,11 +3,13 @@ import json
 from collections.abc import Sequence
 
 from mcp.types import (
+    BlobResourceContents,
     EmbeddedResource,
     ImageContent,
     TextContent,
     Tool,
 )
+from pydantic import AnyUrl
 
 from . import gmail, toolhandler
 from .credential import Credential
@@ -28,7 +30,7 @@ class QueryEmailsToolHandler(toolhandler.ToolHandler):
     def get_tool_description(self) -> Tool:
         return Tool(
             name=self.name,
-            description="""Query Gmail emails based on an optional search query. 
+            description="""Query Gmail emails based on an optional search query.
             Returns emails in reverse chronological order (newest first).
             Returns metadata such as subject and also a short summary of the content.
             """,
@@ -113,7 +115,7 @@ class GetEmailByIdToolHandler(toolhandler.ToolHandler):
         email["attachments"] = attachments
 
         return [TextContent(type="text", text=json.dumps({"email": email}, indent=2))]
-    
+
 
 class DeleteEmailToolHandler(toolhandler.ToolHandler):
     def __init__(self):
@@ -134,7 +136,7 @@ class DeleteEmailToolHandler(toolhandler.ToolHandler):
                 "required": ["email_id"],
             },
         )
-    
+
     @toolhandler.handle_exceptions()
     def run_tool(
         self, args: dict
@@ -204,7 +206,7 @@ class CreateDraftToolHandler(toolhandler.ToolHandler):
         return Tool(
             name=self.name,
             description="""Creates a draft email message from scratch in Gmail with specified recipient, subject, body, and optional CC recipients.
-            
+
             Do NOT use this tool when you want to draft or send a REPLY to an existing message. This tool does NOT include any previous message content. Use the reply_gmail_email tool
             with send=False instead."
             """,
@@ -288,7 +290,7 @@ class SendDraftToolHandler(toolhandler.ToolHandler):
                 text="Successfully sent draft"
             )
         ]
-            
+
 
 
 
@@ -379,7 +381,7 @@ class ReplyEmailToolHandler(toolhandler.ToolHandler):
         gmail_service = gmail.GmailService(credential=Credential(args))
 
         # First get the original message to extract necessary information
-        original_message = gmail_service.get_email_by_id_with_attachments(
+        original_message, _ = gmail_service.get_email_by_id_with_attachments(
             args["original_message_id"]
         )
         if original_message is None:
@@ -487,11 +489,11 @@ class GetAttachmentToolHandler(toolhandler.ToolHandler):
         return [
             EmbeddedResource(
                 type="resource",
-                resource={
-                    "blob": file_data,
-                    "uri": attachment_url,
-                    "mimeType": mime_type,
-                },
+                resource=BlobResourceContents(
+                    blob=file_data,
+                    uri=AnyUrl(attachment_url),
+                    mimeType=mime_type,
+                ),
             )
         ]
 

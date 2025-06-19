@@ -1,6 +1,6 @@
 [project]
 name = "aiden-gsuite"
-version = "0.1.7"
+version = "0.1.8"
 description = "MCP Server to connect to Google G-Suite"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -14,6 +14,7 @@ dependencies = [
  "pytz>=2024.2",
  "requests>=2.32.3",
 ]
+
 [[project.authors]]
 name = "Huang Han"
 email = "huanghan@foxwallet.com"

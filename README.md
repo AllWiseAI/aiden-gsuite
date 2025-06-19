@@ -22,7 +22,7 @@ Right now, this MCP server supports Gmail and Calendar integration with the foll
 * Retrieve multiple emails at once by their IDs.
 * Save multiple attachments from emails to your local system.
 
-2. Calendar
+2. Google Calendar
 * Manage multiple calendars
 * Get calendar events within specified time ranges
 * Create calendar events with:
@@ -57,7 +57,7 @@ No credential file needed with [Aiden](https://github.com/AllWiseAI/aiden-chat).
 "aiden-gsuite": {
   "command": "uvx",
   "args": [
-    "aiden-gsuite@0.1.7"
+    "aiden-gsuite@0.1.8"
   ],
   "credential": {
     "type": "oauth",

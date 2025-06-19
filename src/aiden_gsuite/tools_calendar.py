@@ -179,7 +179,7 @@ class CreateCalendarEventToolHandler(toolhandler.ToolHandler):
 
         return [TextContent(type="text", text=json.dumps({"event": event}, indent=2))]
 
-    
+
 class ModifyCalendarEventToolHandler(toolhandler.ToolHandler):
     def __init__(self):
         super().__init__("modify_calendar_event")
@@ -298,9 +298,4 @@ class DeleteCalendarEventToolHandler(toolhandler.ToolHandler):
             calendar_id=args.get(CALENDAR_ID_ARG, "primary"),
         )
 
-        return [
-            TextContent(
-                type="text",
-                text="Event successfully deleted"
-            )
-        ]
+        return [TextContent(type="text", text="Event successfully deleted")]
