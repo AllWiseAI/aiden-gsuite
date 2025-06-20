@@ -11,6 +11,7 @@ MCP server to interact with Google products. With [Aiden](https://github.com/All
 Right now, this MCP server supports Gmail and Calendar integration with the following capabilities:
 
 1. Gmail
+
 * Get your Gmail user information
 * Query emails with flexible search (e.g., unread, from specific senders, date ranges, with attachments)
 * Retrieve complete email content by ID
@@ -23,6 +24,7 @@ Right now, this MCP server supports Gmail and Calendar integration with the foll
 * Save multiple attachments from emails to your local system.
 
 2. Google Calendar
+
 * Manage multiple calendars
 * Get calendar events within specified time ranges
 * Create calendar events with:
@@ -33,6 +35,16 @@ Right now, this MCP server supports Gmail and Calendar integration with the foll
   + Notification preferences
 * Modify calendar events
 * Delete calendar events
+
+3. Google Drive
+
+* Search drive files
+* List drive files
+* Read drive file content
+* Create drive files or folders
+* Trash/Restore files or folders
+* List trash files
+* Empty the trash
 
 Example prompts you can try:
 
@@ -66,7 +78,8 @@ No credential file needed with [Aiden](https://github.com/AllWiseAI/aiden-chat).
       "openid",
       "https://mail.google.com/",
       "https://www.googleapis.com/auth/calendar",
-      "https://www.googleapis.com/auth/userinfo.email"
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/drive"
     ]
   },
   "transport": "stdio"

@@ -12,6 +12,8 @@ from mcp.types import (
     Tool,
 )
 
+from aiden_gsuite import tools_drive
+
 from . import toolhandler, tools_calendar, tools_gmail
 
 load_dotenv()
@@ -55,6 +57,15 @@ add_tool_handler(tools_calendar.CreateCalendarEventToolHandler())
 add_tool_handler(tools_calendar.ModifyCalendarEventToolHandler())
 add_tool_handler(tools_calendar.DeleteCalendarEventToolHandler())
 
+add_tool_handler(tools_drive.SearchFilesToolHandler())
+add_tool_handler(tools_drive.CreateFolderToolHandler())
+add_tool_handler(tools_drive.CreateFileToolHandler())
+add_tool_handler(tools_drive.ListFilesToolHandler())
+add_tool_handler(tools_drive.ReadFileToolHandler())
+add_tool_handler(tools_drive.TrashFileOrFolderToolHandler())
+add_tool_handler(tools_drive.RestoreFileOrFolderToolHandler())
+add_tool_handler(tools_drive.EmptyTrashToolHandler())
+add_tool_handler(tools_drive.ListTrashToolHandler())
 
 @app.list_tools()
 async def list_tools() -> list[Tool]:
@@ -70,9 +81,6 @@ async def call_tool(
     try:
         if not isinstance(arguments, dict):
             raise RuntimeError("arguments must be dictionary")
-
-        if toolhandler.CREDENTIAL_ARG not in arguments:
-            raise RuntimeError("credential argument is missing in dictionary.")
 
         tool_handler = get_tool_handler(name)
         if not tool_handler:
