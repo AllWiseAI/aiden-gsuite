@@ -1,4 +1,5 @@
 import logging
+import os
 import traceback
 from collections.abc import Sequence
 from typing import Any
@@ -12,7 +13,7 @@ from mcp.types import (
     Tool,
 )
 
-from aiden_gsuite import tools_drive
+from aiden_gsuite import tools_drive, tools_map
 
 from . import toolhandler, tools_calendar, tools_gmail
 
@@ -66,6 +67,17 @@ add_tool_handler(tools_drive.TrashFileOrFolderToolHandler())
 add_tool_handler(tools_drive.RestoreFileOrFolderToolHandler())
 add_tool_handler(tools_drive.EmptyTrashToolHandler())
 add_tool_handler(tools_drive.ListTrashToolHandler())
+
+# if GOOGLE_MAPS_API_KEY is set, add the tools_maps tool handler
+if os.getenv("GOOGLE_MAPS_API_KEY"):
+    add_tool_handler(tools_map.GeocodeToolHandler())
+    add_tool_handler(tools_map.ReverseGeocodeToolHandler())
+    add_tool_handler(tools_map.SearchPlacesToolHandler())
+    add_tool_handler(tools_map.PlaceDetailsToolHandler())
+    add_tool_handler(tools_map.DistanceMatrixToolHandler())
+    add_tool_handler(tools_map.ElevationToolHandler())
+    add_tool_handler(tools_map.DirectionsToolHandler())
+
 
 @app.list_tools()
 async def list_tools() -> list[Tool]:

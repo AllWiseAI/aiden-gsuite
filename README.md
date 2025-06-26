@@ -8,7 +8,7 @@ MCP server to interact with Google products. With [Aiden](https://github.com/All
 
 ## Example prompts
 
-Right now, this MCP server supports Gmail and Calendar integration with the following capabilities:
+Right now, this MCP server supports Gmail, Google Calendar, Google Drive and Google Maps integration with the following capabilities:
 
 1. Gmail
 
@@ -46,6 +46,16 @@ Right now, this MCP server supports Gmail and Calendar integration with the foll
 * List trash files
 * Empty the trash
 
+4. Google Maps
+
+* Convert an address into geographic coordinates
+* Convert a geographic coordinates into an address
+* Search for places
+* Get details about a place
+* Get distance and duration between two places
+* Get elevation at a given location
+* Get directions between two places
+
 Example prompts you can try:
 
 * Retrieve my latest unread messages
@@ -69,8 +79,11 @@ No credential file needed with [Aiden](https://github.com/AllWiseAI/aiden-chat).
 "aiden-gsuite": {
   "command": "uvx",
   "args": [
-    "aiden-gsuite@0.1.8"
+    "aiden-gsuite@0.3.3"
   ],
+  "env": {
+    "GOOGLE_MAPS_API_KEY": ""
+  },
   "credential": {
     "type": "oauth",
     "service": "google",

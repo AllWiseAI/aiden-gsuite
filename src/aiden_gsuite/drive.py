@@ -1,6 +1,5 @@
 from typing import Any, Dict, Optional
 import httplib2
-import logging
 from googleapiclient.discovery import build
 from oauth2client.client import AccessTokenCredentials
 
