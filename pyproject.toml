@@ -1,6 +1,6 @@
 [project]
 name = "aiden-gsuite"
-version = "0.3.5"
+version = "0.3.6"
 description = "MCP Server to connect to Google G-Suite"
 readme = "README.md"
 requires-python = ">=3.13"
