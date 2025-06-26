@@ -230,12 +230,23 @@ class DirectionsToolHandler(toolhandler.ToolHandler):
     def get_tool_description(self) -> Tool:
         return Tool(
             name=self.name,
-            description="""Get directions between two places using Google Maps API""",
+            description="""Get directions between two points using Google Maps API""",
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "origin": {"type": "string"},
-                    "destination": {"type": "string"},
+                    "origin": {
+                        "type": "string",
+                        "description": "Starting point address or coordinates",
+                    },
+                    "destination": {
+                        "type": "string",
+                        "description": "Ending point address or coordinates",
+                    },
+                    "mode": {
+                        "type": "string",
+                        "description": "Travel mode (driving, walking, bicycling, transit)",
+                        "enum": ["driving", "walking", "bicycling", "transit"],
+                    },
                 },
                 "required": ["origin", "destination"],
             },
@@ -246,7 +257,7 @@ class DirectionsToolHandler(toolhandler.ToolHandler):
         self, args: dict
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         # https://maps.googleapis.com/maps/api/directions/json
-        url = f"https://maps.googleapis.com/maps/api/directions/json?origin={args['origin']}&destination={args['destination']}&key={GOOGLE_MAPS_API_KEY}"
+        url = f"https://maps.googleapis.com/maps/api/directions/json?origin={args['origin']}&destination={args['destination']}&mode={args['mode']}&key={GOOGLE_MAPS_API_KEY}"
         response = requests.get(url)
         data = response.json()
         return [TextContent(type="text", text=json.dumps(data, indent=2))]
