@@ -49,10 +49,10 @@ class QueryEmailsToolHandler(toolhandler.ToolHandler):
                     },
                     "max_results": {
                         "type": "integer",
-                        "description": "Maximum number of emails to retrieve (1-500)",
+                        "description": "Maximum number of emails to retrieve (1-10)",
                         "minimum": 1,
-                        "maximum": 500,
-                        "default": 100,
+                        "maximum": 10,
+                        "default": 5,
                     },
                 },
                 "required": [],
@@ -65,7 +65,7 @@ class QueryEmailsToolHandler(toolhandler.ToolHandler):
     ) -> Sequence[TextContent | ImageContent | EmbeddedResource]:
         gmail_service = gmail.GmailService(credential=Credential(args))
         query = args.get("query")
-        max_results = args.get("max_results", 100)
+        max_results = args.get("max_results", 5)
         emails = gmail_service.query_emails(query=query, max_results=max_results)
 
         return [TextContent(type="text", text=json.dumps({"emails": emails}, indent=2))]
