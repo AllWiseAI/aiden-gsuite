@@ -79,7 +79,7 @@ No credential file needed with [Aiden](https://github.com/AllWiseAI/aiden-chat).
 "aiden-gsuite": {
   "command": "uvx",
   "args": [
-    "aiden-gsuite@0.3.7"
+    "aiden-gsuite@0.4.0"
   ],
   "env": {
     "GOOGLE_MAPS_API_KEY": ""
@@ -89,10 +89,13 @@ No credential file needed with [Aiden](https://github.com/AllWiseAI/aiden-chat).
     "service": "google",
     "scopes": [
       "openid",
-      "https://mail.google.com/",
-      "https://www.googleapis.com/auth/calendar",
-      "https://www.googleapis.com/auth/userinfo.email",
-      "https://www.googleapis.com/auth/drive"
+      "https://www.googleapis.com/auth/gmail.compose",
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/gmail.send",
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly",
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/drive.file"
     ]
   },
   "transport": "stdio"
