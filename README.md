@@ -79,7 +79,7 @@ No credential file needed with [Aiden](https://github.com/AllWiseAI/aiden-chat).
 "aiden-gsuite": {
   "command": "uvx",
   "args": [
-    "aiden-gsuite@0.4.0"
+    "aiden-gsuite@0.4.1"
   ],
   "env": {
     "GOOGLE_MAPS_API_KEY": ""
